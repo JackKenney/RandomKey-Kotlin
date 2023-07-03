@@ -1,0 +1,41 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="150"
+    android:viewportHeight="150">
+
+    <!--  left ball  -->
+    <path
+        android:fillColor="#AE3947"
+        android:fillType="evenOdd"
+        android:pathData="
+            M 65,100
+            A13,13 0 1 1 65,95" />
+
+    <!--  right ball  -->
+    <path
+        android:fillColor="#AE3947"
+        android:pathData="
+            M 105,100
+            A13,13 0 1 1 105,94" />
+
+    <!--  left leg  -->
+    <path
+        android:fillColor="#AE3947"
+        android:pathData="M 65,40 l0,55 l-10,0 l0,-55" />
+
+    <!--  right leg -->
+    <path
+        android:fillColor="#AE3947"
+        android:pathData="M 105,40 l0,55 l-10,0 l0,-55" />
+
+    <!--  top line-->
+    <path
+        android:fillColor="#AE3947"
+        android:pathData="M 60,40 l45,0 l0,10 l-45,0" />
+
+    <!--bottom line-->
+    <path
+        android:fillColor="#AE3947"
+        android:pathData="M 60,55 l45,0 l0,10 l-45,0" />
+</vector>
