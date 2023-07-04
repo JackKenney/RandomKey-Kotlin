@@ -3,63 +3,61 @@ package dev.kenney.randomkey
 import kotlin.random.Random
 
 class KeySelector {
-    private val incidentals = arrayOf("\u266D", "", "\u266F")
-    private val notes = arrayOf("A", "B", "C", "D", "E", "F", "G")
-    private var allNotes: MutableList<String>
+    private val notes = arrayOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
+    private val allNotes = arrayOf(
+        arrayOf("B♭", "A♯", "C♭♭"),     // Bb
+        arrayOf("B", "C♭", "A♯♯"),      // B
+        arrayOf("C", "B♯", "D♭♭"),      // C
+        arrayOf("D♭", "C♯", "B♯♯"),     // Db
+        arrayOf("D", "C♯♯", "E♭♭"),     // D
+        arrayOf("E♭", "D♯", "F♭♭"),     // Eb
+        arrayOf("E", "D♯♯", "F♭"),      // E
+        arrayOf("F", "E♯", "G♭♭"),      // F
+        arrayOf("F♯", "G♭", "E♯♯"),     // F#
+        arrayOf("G", "F♯♯", "A♭♭"),     // G
+        arrayOf("A♭", "G♯"),            // Ab
+        arrayOf("A", "G♯♯", "B♭♭")      // A
+    )
+    private var noteIdx = Random.nextInt(0, allNotes.size)
 
-    init {
-        // build list of notes
-        allNotes = mutableListOf()
-
-        // ignore enharmonic notes people don't use
-
-        for (note in notes) {
-            var min = 0
-            var max = incidentals.size - 1
-
-            if (note == "E" || note == "B") max -= 1
-            else if (note == "F" || note == "C") min += 1
-
-            for (incidental in incidentals.slice(min..max)) {
-                allNotes.add(note + incidental)
-            }
-        }
-    }
+    val majorSteps = arrayOf(2, 2, 1, 2, 2, 2, 1)
+    val minorSteps = arrayOf(2, 1, 2, 2, 1, 2, 2)
 
     fun sampleKey(): Map<String, Array<String>> {
-        val rootIdx = sampleIdx()
-        val root = allNotes[rootIdx]
+        val oldIdx = noteIdx
+        while (noteIdx == oldIdx)
+            noteIdx = Random.nextInt(0, allNotes.size)
 
-        val major = buildScale(rootIdx, arrayOf(2, 2, 1, 2, 2, 2, 1))
-        val minor = buildScale(rootIdx, arrayOf(2, 1, 2, 2, 1, 2, 2))
+        val major = buildScale(noteIdx, majorSteps)
 
         return mapOf(
-            "root" to arrayOf(root),
+            "root" to arrayOf(allNotes[noteIdx][0]),
             "notes" to arrayOf("1", "2", "3", "4", "5", "6", "7", "8"),
-            "minor" to minor,
             "major" to major,
         )
     }
 
-    fun sampleIdx(): Int {
-        return Random.nextInt(0, allNotes.size)
-    }
+    fun buildScale(startIdx: Int, steps: Array<Int>): Array<String> {
+        var noteIdx = startIdx
+        val start = allNotes[noteIdx][0]
+        val scale = mutableListOf(start)
 
-    fun buildScale(rootIdx: Int, steps: Array<Int>): Array<String> {
-        val major = Array(8) { "" }
-        major[0] = allNotes[rootIdx]
+        var letterCursor = (notes.indexOf(start[0]) + 1) % notes.size
 
-        var cursor = rootIdx
-        for (i in steps.indices) {
-            val majorStep = steps[i]
-            cursor = (cursor + majorStep) % allNotes.size
-            major[i + 1] = allNotes[cursor]
+        for (step in steps) {
+            noteIdx = (noteIdx + step) % allNotes.size
+            val enharmonic = allNotes[noteIdx]
+            for (note in enharmonic) {
+                val name = note[0]
+                val expectedName = notes[letterCursor]
+                if (name == expectedName) {
+                    letterCursor = (letterCursor + 1) % notes.size
+                    scale.add(note)
+                    break
+                }
+            }
         }
 
-        return major
-    }
-
-    fun flattenScale(scale: Array<String>): String {
-        return scale.reduce { acc, item -> "$acc\t\t|\t\t$item" }
+        return scale.toTypedArray()
     }
 }
