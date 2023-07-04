@@ -24,8 +24,7 @@ class KeySelector {
 
     fun sampleKey(): Map<String, Array<String>> {
         val oldIdx = noteIdx
-        while (noteIdx == oldIdx)
-            noteIdx = Random.nextInt(0, allNotes.size)
+        while (noteIdx == oldIdx) noteIdx = Random.nextInt(0, allNotes.size)
 
         val major = buildScale(noteIdx, majorSteps)
 
