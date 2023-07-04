@@ -21,7 +21,6 @@ class KeySelector {
     private var noteIdx = Random.nextInt(0, allNotes.size)
 
     val majorSteps = arrayOf(2, 2, 1, 2, 2, 2, 1)
-    val minorSteps = arrayOf(2, 1, 2, 2, 1, 2, 2)
 
     fun sampleKey(): Map<String, Array<String>> {
         val oldIdx = noteIdx
